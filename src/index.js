@@ -1,35 +1,56 @@
 /**
- * https://reactjs.org/tutorial/tutorial.html Up to Completing the Game
+ * https://reactjs.org/tutorial/tutorial.html Up to Completing the Game, Declaring a Winner
  */
 
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
+let Square = (props) => {
+  return (
+    <button className="square" onClick={props.onClick}>
+      {props.value}
+    </button>
+  );
+}
+
+/**
 class Square extends React.Component {
+  render() {
+    return (
+      <button className="square" onClick={() => this.props.onClick()}>
+        {this.props.value}
+      </button>
+    );
+  }
+}
+**/
+  
+  class Board extends React.Component {
     constructor(props)  {
       super(props);
-      this.state = { 
-        value: null, 
+      this.state = { //this is referring to the class Board
+        squares: Array(9).fill(null),
+        xIsNext: true, //boolean to determine which player goes next
       };
     }
 
-    render() {
-      return (
-        <button className="square" onClick={() => this.setState({value: "X"})}>
-          {this.state.value}
-        </button>
-      );
+    handleClick(i) {
+      const squares = this.state.squares.slice();
+      squares[i] = "X";
+      this.setState({
+        squares: squares,
+        xIsNext: !this.state.xIsNext,
+      });
     }
-  }
-  
-  class Board extends React.Component {
+
     renderSquare(i) {
-      return <Square value={i}/>;
+      return <Square 
+              value={this.state.squares[i]} onClick={() => this.handleClick(i)} />;
     }
   
     render() {
-      const status = "Next player: X";
+      const status = "Next player: " + (this.state.xIsNext ? "X" : "O");
   
       return (
         <div>
